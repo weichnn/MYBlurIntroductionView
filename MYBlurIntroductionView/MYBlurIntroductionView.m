@@ -85,6 +85,9 @@
 
 -(void)buildIntroductionWithPanels:(NSArray *)panels{
     Panels = panels;
+    for (MYIntroductionPanel *panel in Panels) {
+        panel.parentIntroductionView = self;
+    }
 
     //Add the overlay view to the background
     [self addOverlayViewWithFrame:self.frame];
@@ -146,6 +149,11 @@
     
     //Show the information at the first panel with animations
     [self animatePanelAtIndex:0];
+    
+    //Call first panel view did appear
+    if ([Panels[0] respondsToSelector:@selector(panelDidAppear)]) {
+        [Panels[0] panelDidAppear];
+    }
 }
 
 -(void)buildScrollViewRightToLeft{
@@ -298,7 +306,7 @@
 }
 
 -(void)skipIntroduction{
-    [self hideWithFadeOutDuration:0.5];
+    [self hideWithFadeOutDuration:0.3];
 }
 
 -(void)hideWithFadeOutDuration:(CGFloat)duration{
